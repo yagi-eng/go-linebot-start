@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -54,8 +55,25 @@ func lineHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Print(err)
 				}
+			// メッセージが位置情報の場合
+			case *linebot.LocationMessage:
+				sendRestoInfo(bot, event)
 			}
 			// 他にもスタンプや画像、位置情報など色々受信可能
 		}
+	}
+}
+
+func sendRestoInfo(bot *linebot.Client, e *linebot.Event) {
+	msg := e.Message.(*linebot.LocationMessage)
+
+	lat := strconv.FormatFloat(msg.Latitude, 'f', 2, 64)
+	lng := strconv.FormatFloat(msg.Longitude, 'f', 2, 64)
+
+	replyMsg := "経度：" + lat + "\n緯度：" + lng
+
+	_, err := bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage(replyMsg)).Do()
+	if err != nil {
+		log.Print(err)
 	}
 }
