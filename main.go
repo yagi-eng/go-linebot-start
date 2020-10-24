@@ -85,45 +85,44 @@ func sendRestoInfo(bot *linebot.Client, e *linebot.Event) {
 	}
 }
 
-// Response APIレスポンス
-type Response struct {
-	Results Results `json:"results"`
+// response APIレスポンス
+type response struct {
+	Results results `json:"results"`
 }
 
-// Results APIレスポンスの内容
-type Results struct {
-	Shop []Shop `json:"shop"`
+// results APIレスポンスの内容
+type results struct {
+	Shop []shop `json:"shop"`
 }
 
-// Shop レストラン一覧
-type Shop struct {
+// shop レストラン一覧
+type shop struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
-	Photo   Photo  `json:"photo"`
-	URLS    URLS   `json:"urls"`
+	Photo   photo  `json:"photo"`
+	URLS    urls   `json:"urls"`
 }
 
-// Photo 写真URL一覧
-type Photo struct {
-	Mobile Mobile `json:"mobile"`
+// photo 写真URL一覧
+type photo struct {
+	Mobile mobile `json:"mobile"`
 }
 
-// Mobile モバイル用の写真URL
-type Mobile struct {
+// mobile モバイル用の写真URL
+type mobile struct {
 	L string `json:"l"`
 }
 
-// URLS URL一覧
-type URLS struct {
+// urls URL一覧
+type urls struct {
 	PC string `json:"pc"`
 }
 
 func getRestoInfo(lat string, lng string) []*linebot.CarouselColumn {
 	apikey := "(自分のAPIKEYを入力)"
-	url := "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?format=json" +
-		"&key=" + apikey +
-		"&lat=" + lat +
-		"&lng=" + lng
+	url := fmt.Sprintf(
+		"https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?format=json&key=%s&lat=%s&lng=%s",
+		apikey, lat, lng)
 
 	// リクエストしてボディを取得
 	resp, err := http.Get(url)
@@ -136,12 +135,12 @@ func getRestoInfo(lat string, lng string) []*linebot.CarouselColumn {
 		log.Fatal(err)
 	}
 
-	var data Response
+	var data response
 	if err := json.Unmarshal(body, &data); err != nil {
 		log.Fatal(err)
 	}
 
-	ccs := []*linebot.CarouselColumn{}
+	var ccs []*linebot.CarouselColumn
 	for _, shop := range data.Results.Shop {
 		addr := shop.Address
 		if 60 < utf8.RuneCountInString(addr) {
