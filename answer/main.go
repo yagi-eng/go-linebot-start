@@ -72,7 +72,7 @@ func sendRestoInfo(bot *linebot.Client, e *linebot.Event) {
 	lat := strconv.FormatFloat(msg.Latitude, 'f', 2, 64)
 	lng := strconv.FormatFloat(msg.Longitude, 'f', 2, 64)
 
-	replyMsg := getRestoInfo(lat, lng)
+	replyMsg := fmt.Sprintf("緯度：%s\n経度：%s", lat, lng)
 
 	_, err := bot.ReplyMessage(e.ReplyToken, linebot.NewTextMessage(replyMsg)).Do()
 	if err != nil {
