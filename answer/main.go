@@ -140,7 +140,7 @@ func getRestoInfo(lat string, lng string) []*linebot.CarouselColumn {
 		log.Fatal(err)
 	}
 
-	ccs := []*linebot.CarouselColumn{}
+	var ccs []*linebot.CarouselColumn
 	for _, shop := range data.Results.Shop {
 		addr := shop.Address
 		if 60 < utf8.RuneCountInString(addr) {
