@@ -99,22 +99,22 @@ type results struct {
 type shop struct {
 	Name    string `json:"name"`
 	Address string `json:"address"`
-	Photo   Photo  `json:"photo"`
-	URLS    URLS   `json:"urls"`
+	Photo   photo  `json:"photo"`
+	URLS    urls   `json:"urls"`
 }
 
-// Photo 写真URL一覧
-type Photo struct {
-	Mobile Mobile `json:"mobile"`
+// photo 写真URL一覧
+type photo struct {
+	Mobile mobile `json:"mobile"`
 }
 
-// Mobile モバイル用の写真URL
-type Mobile struct {
+// mobile モバイル用の写真URL
+type mobile struct {
 	L string `json:"l"`
 }
 
-// URLS URL一覧
-type URLS struct {
+// urls URL一覧
+type urls struct {
 	PC string `json:"pc"`
 }
 
